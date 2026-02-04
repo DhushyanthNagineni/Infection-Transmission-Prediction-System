@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Analytics Dashboard</h2>
+
+<h4>Super Spreaders (Centrality)</h4>
+<ul id="centrality" class="list-group"></ul>
+
+<script>
+fetch('/analytics/centrality')
+.then(res => res.json())
+.then(data => {
+    let list = document.getElementById("centrality");
+
+    data.centrality.forEach(item => {
+        let li = document.createElement("li");
+        li.className = "list-group-item";
+
+        li.innerHTML = `Person ${item.person_id} — Degree ${item.degree}`;
+        list.appendChild(li);
+    });
+});
+</script>
+
+{% endblock %}

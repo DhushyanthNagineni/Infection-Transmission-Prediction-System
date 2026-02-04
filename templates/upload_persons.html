@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Upload Persons from CSV</h2>
+<p>Select a CSV file with columns: <b>name, location</b></p>
+
+<form id="csvForm" enctype="multipart/form-data">
+    <input type="file" name="file" class="form-control mb-3" accept=".csv" required>
+    <button class="btn btn-primary">Upload</button>
+</form>
+
+<div id="result" class="mt-4"></div>
+
+<script>
+document.getElementById("csvForm").onsubmit = async function(e) {
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    let res = await fetch("/admin/person/upload", {
+        method: "POST",
+        body: formData
+    });
+
+    let data = await res.json();
+
+    if (data.status === "success") {
+        document.getElementById("result").innerHTML =
+            `<div class='alert alert-success'>Imported ${data.imported} persons!</div>`;
+    } else {
+        document.getElementById("result").innerHTML =
+            `<div class='alert alert-danger'>Error: ${data.error}</div>`;
+    }
+};
+</script>
+
+{% endblock %}

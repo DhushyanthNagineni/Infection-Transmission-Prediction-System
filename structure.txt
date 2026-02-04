@@ -1,0 +1,34 @@
+infection_simulator_backend/
+│
+├── app.py                 # main flask app
+│
+├── config.py              # configurations
+│
+├── requirements.txt       # python dependencies
+│── templates/
+│   base.html
+│   index.html
+│   │
+│   │── persons.html
+│   │── contacts.html
+│   │── simulate.html
+│   │── results.html
+│   │── analytics.html
+│
+├── /database
+│     ├── models.py        # ORM models
+│     ├── schema.sql       # SQL schema (optional)
+│     └── db.py            # database connection
+│
+├── /services
+│     ├── graph_engine.py  # our graph engine module
+│     ├── simulator.py     # infection simulation logic
+│     └── analytics.py     # risk, probability, centrality
+│
+├── /routes
+│     ├── admin_routes.py  # admin endpoints
+│     ├── simulate_routes.py
+│     └── analytics_routes.py
+│
+└── /utils
+      └── helpers.py       # utilities

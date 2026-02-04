@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Simulation Results</h2>
+
+<div id="output"></div>
+
+<a href="/graph?sim_id={{ sim_id }}" class="btn btn-warning mt-3">
+    Visualize Infection on Graph
+</a>
+
+
+<script>
+fetch(`/simulation/{{ sim_id }}/results`)
+.then(res => res.json())
+.then(data => {
+    let out = document.getElementById("output");
+
+    data.results.forEach(r => {
+        let card = document.createElement("div");
+        card.className = "card mb-3 p-3";
+
+        card.innerHTML = `
+            <h4>Day ${r.day}</h4>
+            <p><b>Infected:</b> ${r.infected.join(", ")}</p>
+            <p><b>New:</b> ${r.newly_infected.join(", ")}</p>
+        `;
+
+        out.appendChild(card);
+    });
+});
+</script>
+
+{% endblock %}

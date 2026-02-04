@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Add Connection</h2>
+
+<form id="addContactForm" class="mb-4">
+    <div class="row">
+        <div class="col-md-3">
+            <input name="person1" class="form-control" placeholder="Person 1 ID" required>
+        </div>
+        <div class="col-md-3">
+            <input name="person2" class="form-control" placeholder="Person 2 ID" required>
+        </div>
+        <div class="col-md-3">
+            <input name="weight" class="form-control" placeholder="Weight (0.1 - 1)" value="1" required>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-primary w-100">Add Connection</button>
+        </div>
+    </div>
+</form>
+
+<h3>Existing Connections    </h3>
+<ul id="contactList" class="list-group"></ul>
+
+<script>
+
+// ------------------- LOAD CONTACT LIST -------------------
+function loadContacts() {
+    fetch('/admin/contact/list')
+    .then(res => res.json())
+    .then(data => {
+        let list = document.getElementById("contactList");
+        list.innerHTML = "";
+
+        data.contacts.forEach(c => {
+            let item = document.createElement("li");
+            item.className = "list-group-item";
+            item.innerHTML = `
+                ID: ${c.id} — ${c.person1_id} ↔ ${c.person2_id}
+                <span class="badge bg-primary ms-2">w=${c.weight}</span>
+            `;
+            list.appendChild(item);
+        });
+    });
+}
+
+loadContacts(); // run initially
+
+
+
+// ------------------- ADD CONTACT -------------------
+document.getElementById("addContactForm").onsubmit = function(e) {
+    e.preventDefault();
+
+    let form = e.target;
+
+    let data = {
+        person1_id: parseInt(form.person1.value),
+        person2_id: parseInt(form.person2.value),
+        weight: parseFloat(form.weight.value)
+    };
+
+    fetch('/admin/contact/add', {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(x => {
+        alert("Contact added successfully!");
+
+        form.reset();
+        loadContacts();     // REFRESH LIST HERE ✔
+    });
+};
+
+</script>
+
+{% endblock %}

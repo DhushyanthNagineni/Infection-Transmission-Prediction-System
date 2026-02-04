@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Infection Spread Animation</h2>
+
+<!-- Controls -->
+<div class="mb-3">
+    <button id="playBtn" class="btn btn-success">▶ Play</button>
+    <button id="pauseBtn" class="btn btn-danger">⏸ Pause</button>
+    <span class="ms-3 fw-bold">Day: <span id="dayLabel">0</span></span>
+</div>
+
+<input type="range" id="daySlider" min="0" max="0" value="0" class="form-range" style="width: 400px;" />
+
+<!-- Graph container -->
+<div id="network" style="height: 85vh; width: 100%; border: 1px solid #ccc;"></div>
+
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+<script>
+    const SIM_ID = new URLSearchParams(window.location.search).get("sim_id");
+</script>
+
+<script src="{{ url_for('static', filename='js/graph.js') }}"></script>
+
+{% endblock %}

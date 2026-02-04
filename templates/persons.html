@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Add Person</h2>
+
+<form id="addPersonForm" class="mb-4">
+    <div class="row">
+        <div class="col-md-4">
+            <input name="name" class="form-control" placeholder="Name" required>
+        </div>
+        <div class="col-md-4">
+            <input name="location" class="form-control" placeholder="Location or Community" required>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-success w-100">Add</button>
+        </div>
+    </div>
+</form>
+
+<h3>All Persons</h3>
+<ul id="personList" class="list-group"></ul>
+
+<script>
+
+// ---------------- LOAD PERSON LIST ----------------
+function loadPersons() {
+    fetch('/admin/person/list')
+    .then(res => res.json())
+    .then(data => {
+        let list = document.getElementById("personList");
+        list.innerHTML = "";
+        data.persons.forEach(p => {
+            let item = document.createElement("li");
+            item.className = "list-group-item";
+            item.innerHTML = `${p.id}. ${p.name} — ${p.location}`;
+            list.appendChild(item);
+        });
+    });
+}
+loadPersons();
+
+// ---------------- ADD PERSON ----------------
+document.getElementById("addPersonForm").onsubmit = function(e) {
+    e.preventDefault();
+
+    let form = e.target;
+
+    let data = {
+        name: form.name.value,
+        location: form.location.value
+    };
+
+    fetch('/admin/person/add', {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(x => {
+        alert("Person added successfully!");
+        form.reset();
+        loadPersons();
+    });
+};
+
+</script>
+
+{% endblock %}

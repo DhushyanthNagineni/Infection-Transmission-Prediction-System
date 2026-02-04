@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Upload Contact Network (CSV)</h2>
+<p>CSV format: <b>person1_id, person2_id, weight</b></p>
+
+<form id="contactCsvForm" enctype="multipart/form-data">
+    <input type="file" name="file" class="form-control mb-3" accept=".csv" required>
+    <button class="btn btn-primary">Upload</button>
+</form>
+
+<div id="result" class="mt-4"></div>
+
+<script>
+document.getElementById("contactCsvForm").onsubmit = async function(e) {
+    e.preventDefault();
+
+    let formData = new FormData(this);
+
+    let res = await fetch("/admin/contact/upload", {
+        method: "POST",
+        body: formData
+    });
+
+    let data = await res.json();
+
+    if (data.status === "success") {
+        document.getElementById("result").innerHTML =
+            `<div class='alert alert-success'>Imported ${data.imported} connections!</div>`;
+    } else {
+        document.getElementById("result").innerHTML =
+            `<div class='alert alert-danger'>Error: ${data.error}</div>`;
+    }
+};
+</script>
+
+{% endblock %}

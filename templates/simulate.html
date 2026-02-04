@@ -1,0 +1,51 @@
+
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Run Simulation</h2>
+
+<form id="simForm">
+    <div class="row">
+        <div class="col-md-3">
+            <input id="zero" class="form-control" placeholder="Patient Zero ID">
+        </div>
+        <div class="col-md-3">
+            <input id="prob" class="form-control" placeholder="Infection Probability (0-1)">
+        </div>
+        <div class="col-md-3">
+            <input id="days" class="form-control" placeholder="Days">
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-success w-100">Simulate</button>
+        </div>
+    </div>
+</form>
+
+<div id="result" class="mt-4"></div>
+
+<script>
+document.getElementById("simForm").onsubmit = e => {
+    e.preventDefault();
+
+    let data = {
+        patient_zero_id: parseInt(document.getElementById("zero").value),
+        infection_probability: parseFloat(document.getElementById("prob").value),
+        days: parseInt(document.getElementById("days").value)
+    };
+
+    fetch('/simulate', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(x => {
+        document.getElementById("result").innerHTML =
+            `<h4>Simulation Started</h4>
+             <p>Simulation ID: ${x.simulation_id}</p>
+             <a class="btn btn-primary" href="/results/${x.simulation_id}">View Results</a>`;
+    });
+};
+</script>
+
+{% endblock %}
